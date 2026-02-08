@@ -2,11 +2,12 @@
 
 A modern Android application template/project built with Jetpack Compose, following Clean Design principles.
 
-<img src="image_1.png" alt="Img1" width="200"/>
-<img src="image_2.png" alt="Img2" width="200"/>
-<img src="image_3.png" alt="Img3" width="200"/>
-<img src="image_4.png" alt="Img3" width="200"/>
-
+<p float="left">
+     <img src="image_1.png" alt="Img1" width="250"/>
+    <img src="image_2.png" alt="Img2" width="250"/>
+    <img src="image_3.png" alt="Img3" width="250"/>
+    <img src="image_4.png" alt="Img3" width="250"/>
+</p>
 
 ## 🏗 Architecture
 
