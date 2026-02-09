@@ -121,6 +121,7 @@ fun AchievementModal(
             text = "Congratulations, you've earned a badge for completing this module!",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
+            fontFamily = MaterialTheme.typography.bodySmall.fontFamily,
             color = Color(0xFF64748B)
         )
 
@@ -139,6 +140,7 @@ fun AchievementModal(
             Text(
                 text = "Share your achievement",
                 color = Color.White,
+                fontFamily = MaterialTheme.typography.headlineLarge.fontFamily,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )

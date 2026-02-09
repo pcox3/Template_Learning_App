@@ -17,12 +17,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
@@ -32,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -47,10 +50,12 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -106,11 +111,13 @@ fun CurriculumScreen(
                         text = "Stage $completed of $total",
                         fontSize = smallText,
                         fontWeight = FontWeight.W400,
+                        fontFamily = MaterialTheme.typography.labelSmall.fontFamily,
                         lineHeight = 30.sp,
                         color = Color.DarkGray
                     )
                     Text(
                         text = "Fullstack mobile \nengineer path",
+                        fontFamily = MaterialTheme.typography.headlineLarge.fontFamily,
                         fontSize = extraLargeText,
                         fontWeight = FontWeight.W700
                     )
@@ -119,25 +126,36 @@ fun CurriculumScreen(
                 Spacer(modifier = Modifier.height(mediumSpacing))
 
                 Box {
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                        LazyVerticalGrid(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            columns = GridCells.Fixed(2)
+                        ) {
+                            itemsIndexed(
+                                items = modules,
+                                key = { _, module -> module.id },
+                                span = { index, _ ->
+                                    if (index == modules.size - 1 && index % 2 == 0) {
+                                        GridItemSpan(2)
+                                    } else {
+                                        GridItemSpan(1)
+                                    }
+                                }
+                            ) { index, module ->
 
-                    LazyVerticalGrid(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        columns = GridCells.Fixed(2)
-                    ) {
-                        itemsIndexed(
-                            items = modules,
-                            key = { _, module -> module.id }
-                        ) { index, module ->
+                                val offsetY = if (module.state != PathState.COMPLETED &&
+                                    index % 2 == 1) 30.dp else 0.dp
 
-                            val offset = if (module.state != PathState.COMPLETED &&
-                                index % 2 == 1) 50.dp else 0.dp
-
-                            ModuleCard(
-                                modifier = Modifier
-                                    .offset(y = offset),
-                                module
-                            )
+                                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                                    ModuleCard(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .offset(y = offsetY),
+                                        module = module
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -204,6 +222,7 @@ fun ModuleCard(
             text = module.title,
             lineHeight = 15.sp,
             fontSize = smallestText,
+            fontFamily = MaterialTheme.typography.labelSmall.fontFamily,
             fontWeight = FontWeight.W600,
             textAlign = TextAlign.Center
         )
